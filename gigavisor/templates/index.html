@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div id="openseadragon1" style="height: 600px;" class="w-auto p-3"></div>
+<div id="clips" style="display: table; width: auto;"">
+<!-- EXPERIMENTAL-->
+{% for post in posts %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date }}</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.width }}x{{ post.height }}</p>
+            <img src="{{ post.clip }}" height="200">
+          </div>
+        </article>
+    {% endfor %}
+</div>
+<!-- <div id="toolbarDiv" class="toolbar">
+        <span style='float:left;margin:10px 0 0 20px'>
+        &lt;&nbsp;
+            <a id="previous" href="#previous-page">Previous</a>
+            | <a id="next" href="#next-page">Next</a>
+            &nbsp;&gt;
+            <span id='currentpage'> 1 of 3 </span>
+        </span>
+</div> -->
+<script
+      src="http://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+<script src="{{ url_for('static', filename='openseadragon/openseadragon.min.js') }}"></script>
+<script src="{{ url_for('static', filename='openseadragon/dist/openseadragonselection.js') }}"></script>
+<script type="text/javascript">
+    const socket = io()
+    var viewer = OpenSeadragon({
+      id: "openseadragon1",
+      // nextButton:     "next",
+      // previousButton: "previous",
+      //showNavigator:  true,
+      sequenceMode: true,
+      prefixUrl: "{{ url_for('static', filename='openseadragon/images/') }}",
+      tileSources: [{
+        type: 'image',
+        url: "{{ url_for('static', filename='images/stadium.jpg') }}"
+      },{
+        type: 'image',
+        url: "{{ url_for('static', filename='images/mountain.jpg') }}"
+      },{
+        type: 'image',
+        url: "{{ url_for('static', filename='images/snow.jpg') }}"
+      }]
+  });
+  //selection plugin
+    selection = viewer.selection({
+        restrictToImage: true,
+        onSelection: function(rect) {
+            //alert(rect + ' Center point: ' + rect.getCenter());
+            //console.log(rect);
+            //var center = rect.getCenter()
+            //$.post('/reqpost', JSON.stringify({"x": rect.x, "y": rect.y}));
+            //$.post('/reqpost', {"url": viewer.source.url, "x": rect.x, "y": rect.y, "width": rect.width, "height": rect.height});
+            socket.emit('message', {url: viewer.source.url, x: rect.x, y: rect.y, width: rect.width, height: rect.height});
+        }
+    });
+    //console.log(viewer);
+    socket.on('message', function(clipmsg) {
+      $('#clips').append('<article class="media content-section"><div class="media-body"><div class="article-metadata"><a class="mr-2" href="#">'+clipmsg.author+'</a><small class="text-muted">'+clipmsg.date+'</small></div><h2><a class="article-title" href="#">'+clipmsg.width+'x'+clipmsg.height+'</a></h2><p class="article-content">'+clipmsg.width+'x'+clipmsg.height+'</p><img src="'+clipmsg.clip+'" height="200"></div></article>');
+    })
+</script>
+
+
+{% endblock content %}
