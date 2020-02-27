@@ -48,7 +48,7 @@ def clippings():
 # Run apps from Python interpreter, in debug mode
 if __name__ == '__main__':
     #app.run(debug=True)
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0', port=5000)
 
 
 # @app.route('/reqpost', methods=['POST'])
