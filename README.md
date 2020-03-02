@@ -2,8 +2,7 @@
 Visualization for python filters
 
 ## Usage
-Build the container
-Ex:
+Build the container and run
 
 ```bash
 docker build -t gigavisor .
