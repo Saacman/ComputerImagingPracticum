@@ -1,24 +1,21 @@
-# Flask 1.1.1
-# Python 3.7.5
-
-from flask import Flask, render_template, url_for, flash, redirect, jsonify, request
-from flask_socketio import SocketIO, send
+from flask import render_template, url_for, flash, redirect, jsonify
+from gigavisor import app, socketio
+from gigavisor.image import clip
+from flask_socketio import send
 from datetime import datetime
-from image import clip
+import glob
 
-# Create an instance of a Flask app
-app = Flask(__name__)
-app.debug = True
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
-# TODO: implement DB
+
+# TODO: implement DB, post imag, etc
 posts = []
 
 #App routes and definitions
 @app.route('/')
 def home():
-
+    #gall = glob.glob("static/images/*.jpg")
+    #print(gall)
     return render_template('index.html', posts=posts)
+
 
 @app.route("/about")
 def about():
@@ -30,25 +27,21 @@ def about():
     return render_template('about.html', title='about', churro=churro)
 
 
-
 @socketio.on('message')
 def handleMessage(clipmsg):
     clipmsg['author']="Isaac"
     now = datetime.now()
     clipmsg['date'] = now.strftime("%d/%m/%Y, %H:%M:%S")
     clip(clipmsg)
+    # Add to DB ???
     posts.append(clipmsg)
     send(clipmsg, broadcast = True)
 
+
 @app.route('/clippings')
 def clippings():
-
     return render_template('clippings.html', title='clippings', posts=posts)
 
-# Run apps from Python interpreter, in debug mode
-if __name__ == '__main__':
-    #app.run(debug=True)
-    socketio.run(app, host='0.0.0.0', port=5000)
 
 
 # @app.route('/reqpost', methods=['POST'])

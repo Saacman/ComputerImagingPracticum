@@ -12,4 +12,4 @@ def clip(postdict):
     trim = img.crop(area)
     dir = f"/static/clips/{width * height}.jpg"
     postdict['clip'] = dir
-    trim.save(dir[1:])
+    trim.save("gigavisor/" + dir[1:])
