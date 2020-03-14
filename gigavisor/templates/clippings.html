@@ -9,7 +9,7 @@
               <small class="text-muted">{{ post.date }}</small>
             </div>
             <h2><a class="article-title" href="#">{{ post.width }}x{{ post.height }}</a></h2>
-            <p class="article-content">{{ post.desc }}</p>
+            <p class="article-content">@({{ post.x }}, {{ post.y }})<br>{{ post.desc }}</p>
             <img src="{{ post.clip }}" height="200">
           </div>
         </article>
