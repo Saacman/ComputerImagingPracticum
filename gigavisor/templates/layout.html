@@ -27,13 +27,19 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="/">Index</a>
-              <a class="nav-item nav-link" href="/about">About</a>
+              <a class="nav-item nav-link" href="{{ url_for('home') }}">Index</a>
+              <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              <a class="nav-item nav-link" href="/login">Login</a>
-              <a class="nav-item nav-link" href="/register">Register</a>
+                {% if current_user.is_authenticated %}
+                <!-- <a class="nav-item nav-link" href=#>New Post</a>
+                <a class="nav-item nav-link" href="#">Account</a> -->
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -42,6 +48,15 @@
     <main role="main" class="container">
       <div class="row">
         <div id="maindiv" class="col-md-9">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
           {% block content %}{% endblock %}
         </div>
         <div class="col-md-3">
@@ -49,7 +64,7 @@
             <h3>Sidebar</h3>
             <p class='text-muted'>Useful Links
               <ul class="list-group">
-                <li class="list-group-item list-group-item-light"><a href="/clippings">Clippings</a></li>
+                <li class="list-group-item list-group-item-light"><a href="{{ url_for('clippings') }}">Clippings</a></li>
                 <li class="list-group-item list-group-item-light">DeepZoom</li>
                 <li class="list-group-item list-group-item-light">PythonAnywhere</li>
                 <li class="list-group-item list-group-item-light">Merge&Copy</li>

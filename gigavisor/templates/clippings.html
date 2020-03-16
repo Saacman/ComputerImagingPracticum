@@ -5,11 +5,11 @@
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date }}</small>
+              <a class="mr-2" href="#">{{ post.author.username }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
-            <h2><a class="article-title" href="#">{{ post.width }}x{{ post.height }}</a></h2>
-            <p class="article-content">@({{ post.x }}, {{ post.y }})<br>{{ post.desc }}</p>
+            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+            <p class="article-content">@({{ post.x }}, {{ post.y }})<br>{{ post.content }}</p>
             <img src="{{ post.clip }}" height="200">
           </div>
         </article>
