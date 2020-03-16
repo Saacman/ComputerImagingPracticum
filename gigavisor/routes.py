@@ -59,10 +59,10 @@ def handleMessage(clipmsg):
     original = clipmsg['url'], clip = pic_path)
     db.session.add(post)
     db.session.commit()
-    print(type(post))
-    # Add to DB ???
-    #posts.append(clipmsg)
-    send(post.to_dict(), broadcast = True)
+    clipmsg['author'] = post.author.username
+    clipmsg['date'] = post.date_posted.strftime('%Y-%m-%d')
+    clipmsg['clip'] = post.clip
+    send(clipmsg, broadcast = True)
 
 # Could be deprecated
 @app.route('/clippings')

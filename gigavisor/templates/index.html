@@ -50,6 +50,7 @@
         },]
   });
   //selection plugin
+  {% if current_user.is_authenticated %}
     selection = viewer.selection({
         restrictToImage: true,
         onSelection: function(rect) {
@@ -68,7 +69,7 @@
 // });
         }
     });
-    //console.log(viewer);
+    {% endif %}
     socket.on('message', function(clipmsg) {
         console.log(clipmsg);
         $('#maindiv').append('<article class="media content-section"><div class="media-body"><div class="article-metadata"><a class="mr-2" href="#">'+clipmsg.author+'</a><small class="text-muted">'+clipmsg.date+'</small></div><h2><a class="article-title" href="#">'+clipmsg.width+'x'+clipmsg.height+'</a></h2><p class="article-content">@('+clipmsg.x+', '+clipmsg.y+')<br>'+clipmsg.desc+'</p><img src="'+clipmsg.clip+'" height="200"></div></article>');
